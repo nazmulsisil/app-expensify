@@ -376,7 +376,7 @@ exports[`should render expense with expenses data 1`] = `
     onChange={[Function]}
     placeholder="Amount"
     type="number"
-    value="156"
+    value="1095"
   />
   <textarea
     id="note"
