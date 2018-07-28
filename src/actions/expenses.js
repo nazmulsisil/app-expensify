@@ -45,3 +45,25 @@ export const removeExpense = ({ id } = {}) => {
     id
   };
 };
+
+export const setExpenses = expenses => {
+  return {
+    type: 'SET_EXPENSES',
+    expenses
+  };
+};
+
+export const startSetExpenses = expenses => {
+  return dispatch => {
+    return database.ref('expenses').once('value', snapshot => {
+      const dataFromDB = [];
+      snapshot.forEach(childSnapshot => {
+        dataFromDB.push({
+          id: childSnapshot.key,
+          ...childSnapshot.val()
+        });
+      });
+      dispatch(setExpenses(dataFromDB));
+    });
+  };
+};
