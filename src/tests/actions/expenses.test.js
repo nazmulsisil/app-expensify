@@ -8,7 +8,8 @@ import {
   removeExpense,
   startAddExpense,
   setExpenses,
-  startSetExpenses
+  startSetExpenses,
+  startRemoveExpense
 } from '../../actions/expenses';
 import expenses from '../fixtures/expenses';
 
@@ -36,6 +37,45 @@ test('should set up remove expense action object', () => {
     type: 'REMOVE_EXPENSE',
     id: '123abc'
   });
+});
+
+test('should remove expenses from firebase', done => {
+  const store = createMockStore({});
+  const id = expenses[2].id;
+
+  store
+    .dispatch(startRemoveExpense({ id }))
+    .then(() => {
+      const action = store.getActions()[0];
+      expect(action).toEqual({
+        type: 'REMOVE_EXPENSE',
+        id
+      });
+      const dbRef = database.ref(`expenses/${action.id}`).once('value');
+      return dbRef;
+    })
+    .then(snapshot => {
+      expect(snapshot.val()).toBeFalsy();
+      done();
+    });
+
+  // let dbBeforeRemove;
+  // database.ref('expenses/2').on('value', snapShot => {
+  //   dbBeforeRemove = snapShot.val();
+  //   console.log(dbBeforeRemove);
+  //   // expect(dbBeforeRemove).toEqual({
+  //   //   amount: 109500,
+  //   //   createdAt: -345600000,
+  //   //   description: 'Rent',
+  //   //   note: ''
+  //   // });
+  // });
+
+  // const store = createMockStore({});
+  // store.dispatch(startRemoveExpense({ id: '2' })).then(() => {
+  //   console.log(store.getActions());
+  //   done();
+  // });
 });
 
 test('should created action object for edit expense', () => {
