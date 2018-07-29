@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Route, Redirect } from 'react-router-dom';
-import Header from './Header';
+import Header from '../components/Header';
 
 export const PrivateRoute = props => {
   const { component: ComponentToRender, isAuthenticated, ...rest } = props;
@@ -18,7 +18,7 @@ export const PrivateRoute = props => {
   };
   return (
     <div>
-      <Route {...props} component={decideIfShouldShowComponent} />
+      <Route {...rest} component={decideIfShouldShowComponent} />
     </div>
   );
 };
